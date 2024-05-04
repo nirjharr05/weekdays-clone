@@ -1,73 +1,112 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import JobCardExpanded from "@/components/JobCard/Expanded";
+import { JobDetails } from "@/interfaces/JobItem";
 import styles from "./Standard.module.css";
 
-const JobCard = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const JobCard = (props: any) => {
+    const { data } = props;
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [cardData, setCardData] = useState<Partial<JobDetails>>({});
 
-  const dummyData = {
-    title: "Senior Mobile Engineer",
-    company: "Outbrain",
-    location: "Gurugram",
-    salary: "₹14 - 18 LPA",
-    about:
-      "Outbrain (Nasdaq: OB) is a leading technology platform that drives business results by engaging people across the open web...",
-    experience: "3 years",
-    detailedInfo:
-      "This is a sample job and you must have displayed it to understand that its not just some random lorem ipsum text but something which was manually written. Oh well, if random text is what you were looking for then here it is: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages and now in this assignment.",
-  };
+    const salaryStringBuilder = (
+        minSalary: number | null,
+        maxSalary: number | null,
+        currency: string | null = "INR",
+    ): string => {
+        if (minSalary === null && maxSalary === null) {
+            return "Not Available";
+        }
+        if (minSalary === null) {
+            return `0 - ${maxSalary} ${currency}`;
+        }
+        if (maxSalary === null) {
+            return `${minSalary}+ ${currency}`;
+        }
+        return `${currency} ${minSalary} - ${maxSalary}`;
+    };
 
-  return (
-    <div className={styles.card}>
-      <div className={styles.cardHeader}>
-        <div className={styles.header}></div>
-      </div>
-      <div className={styles.cardBody}>
-        <div className={styles.companyProfile}>
-          <div className={styles.logoHolder}>Image</div>
-          <div className={styles.dataHolder}>
-            <div className={styles.position}>
-              <h3>{dummyData.company}</h3>
-              <h2>{dummyData.title}</h2>
+    useEffect(() => {
+        setCardData(data);
+    }, [data]);
+
+    return (
+        <div className={styles.card}>
+            <div className={styles.cardHeader}>
+                <div className={styles.header}>
+                    {/* Randomizing the header as this is not coming part of API */}
+                    <p>
+                        <span>⌛</span>
+                        Posted {Math.floor(Math.random() * 10) + 1} days ago
+                    </p>
+                </div>
             </div>
-            <p>{dummyData.location}</p>
-          </div>
-        </div>
-        <p className={styles.salaryHolder}>
-          Estimated Salary : {dummyData.salary}
-        </p>
-        <div className={styles.aboutCompany}>
-          <div className={styles.data}>
-            <p className={styles.jdHeader}>Job Description:</p>
-            <p className={styles.jdBody}>{dummyData.detailedInfo}</p>
-          </div>
-          <div className={styles.showMore}>
-            <button
-              className={styles.button}
-              onClick={() => setIsExpanded(true)}
-            >
-              View job
-            </button>
-          </div>
-          <div className={styles.experienceHolder}>
-            <h3>Minimum Experience</h3>
-            <h2>{dummyData.experience}</h2>
-          </div>
-        </div>
-      </div>
-      <div className={styles.cardFooter}>
-        <button className={styles.easyApply}>Easy Apply</button>
-        <button className={styles.unlockReferral}>Unlock Referral links</button>
-      </div>
+            <div className={styles.cardBody}>
+                <div className={styles.companyProfile}>
+                    <div className={styles.logoHolder}>
+                        <img src={cardData?.logoUrl ?? ""} alt="company-logo" />
+                    </div>
+                    <div className={styles.dataHolder}>
+                        <div className={styles.position}>
+                            <h3 id={styles.companyName}>
+                                {cardData?.companyName ?? "N/A"}
+                            </h3>
+                            <h2 id={styles.jobRole}>
+                                {cardData?.jobRole ?? "N/A"}
+                            </h2>
+                        </div>
+                        <p id={styles.location}>
+                            {cardData?.location ?? "N/A"}
+                        </p>
+                    </div>
+                </div>
+                <p className={styles.salaryHolder}>
+                    Estimated Salary : &nbsp;
+                    {salaryStringBuilder(
+                        cardData?.minJdSalary ?? null,
+                        cardData?.maxJdSalary ?? null,
+                        cardData?.salaryCurrencyCode,
+                    )}
+                </p>
+                <div className={styles.aboutCompany}>
+                    <div className={styles.data}>
+                        <p className={styles.jdHeader}>Job Description:</p>
+                        <p className={styles.jdBody}>
+                            {cardData?.jobDetailsFromCompany}
+                        </p>
+                    </div>
+                    <div className={styles.showMore}>
+                        <button
+                            className={styles.button}
+                            onClick={() => setIsExpanded(true)}
+                        >
+                            View job
+                        </button>
+                    </div>
+                    <div className={styles.experienceHolder}>
+                        <h3>Minimum Experience</h3>
+                        <h2>
+                            {cardData?.minExp
+                                ? `${cardData?.minExp} years`
+                                : "-"}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.cardFooter}>
+                <button className={styles.easyApply}>Easy Apply</button>
+                <button className={styles.unlockReferral}>
+                    Unlock Referral links
+                </button>
+            </div>
 
-      {isExpanded && (
-        <JobCardExpanded
-          data={dummyData}
-          onClose={() => setIsExpanded(false)}
-        />
-      )}
-    </div>
-  );
+            {isExpanded && (
+                <JobCardExpanded
+                    data={cardData}
+                    onClose={() => setIsExpanded(false)}
+                />
+            )}
+        </div>
+    );
 };
 
 export default JobCard;

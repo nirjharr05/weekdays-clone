@@ -1,134 +1,134 @@
 .multiSelectDropdown {
-  display: flex;
-  align-items: center;
-  min-height: 38px;
-  justify-content: space-between;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  min-width: 150px;
-  position: relative;
-  flex-wrap: wrap;
-  padding-left: 8px;
-  margin-right: 4px;
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    justify-content: space-between;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 150px;
+    position: relative;
+    flex-wrap: wrap;
+    padding-left: 8px;
+    margin-right: 4px;
 }
 
 .inputLike {
-  display: flex;
-  align-items: center;
-  cursor: text;
-  width: 100%;
-  flex-wrap: wrap;
-  border: none;
-  outline: none;
+    display: flex;
+    align-items: center;
+    cursor: text;
+    width: 100%;
+    flex-wrap: wrap;
+    border: none;
+    outline: none;
 }
 
 .inputLike:focus-within {
-  border-color: blue;
+    border-color: blue;
 }
 
 .placeholder {
-  color: #999;
-  font-size: 14px;
-  flex-grow: 1;
-  text-align: left;
+    color: #999;
+    font-size: 14px;
+    flex-grow: 1;
+    text-align: left;
 }
 
 .tag {
-  display: flex;
-  min-width: 0px;
-  background-color: rgb(230, 230, 230);
-  border-radius: 2px;
-  margin: 2px;
-  box-sizing: border-box;
-  font-size: 12px;
-  .tagText {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: flex;
+    min-width: 0px;
+    background-color: rgb(230, 230, 230);
     border-radius: 2px;
-    color: rgb(51, 51, 51);
-    font-size: 12px;
-    padding: 3px 3px 3px 6px;
+    margin: 2px;
     box-sizing: border-box;
-    text-transform: capitalize;
-  }
+    font-size: 12px;
+    .tagText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 2px;
+        color: rgb(51, 51, 51);
+        font-size: 12px;
+        padding: 3px 3px 3px 6px;
+        box-sizing: border-box;
+        text-transform: capitalize;
+    }
 }
 
 .tag button {
-  -webkit-box-align: center;
-  align-items: center;
-  display: flex;
-  border-radius: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-  box-sizing: border-box;
-  font-size: 12px;
-  border: none;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    box-sizing: border-box;
+    font-size: 12px;
+    border: none;
 }
 .indicator {
-  display: flex;
-  .separator {
-    /* align-self: stretch; */
-    width: 1px;
-    background-color: #ccc;
-    margin-bottom: 8px;
-    margin-top: 8px;
-    box-sizing: border-box;
-    display: block;
-    height: 20px;
-  }
-  .dropdownArrowContainer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-
-    .dropdownToggle {
-      cursor: pointer;
-      display: inline-block;
-      fill: #ccc;
-      line-height: 1;
-      stroke: #ccc;
-      stroke-width: 0;
+    .separator {
+        /* align-self: stretch; */
+        width: 1px;
+        background-color: #ccc;
+        margin-bottom: 8px;
+        margin-top: 8px;
+        box-sizing: border-box;
+        display: block;
+        height: 20px;
     }
-  }
+    .dropdownArrowContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+
+        .dropdownToggle {
+            cursor: pointer;
+            display: inline-block;
+            fill: #ccc;
+            line-height: 1;
+            stroke: #ccc;
+            stroke-width: 0;
+        }
+    }
 }
 
 .dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  border-top: none;
-  z-index: 1;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 200px;
-  overflow-y: auto;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border-top: none;
+    z-index: 1;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .category {
-  font-weight: bold;
-  padding: 5px 10px;
+    font-weight: bold;
+    padding: 5px 10px;
 }
 
 .item {
-  padding: 3px 10px;
-  cursor: pointer;
-  display: block;
+    padding: 3px 10px;
+    cursor: pointer;
+    display: block;
 }
 
 .clearButton {
-  border: none;
-  background: transparent;
-  color: #ccc;
-  padding: 2px 5px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
+    border: none;
+    background: transparent;
+    color: #ccc;
+    padding: 2px 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
 }
