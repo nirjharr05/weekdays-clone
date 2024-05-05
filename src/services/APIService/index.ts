@@ -13,6 +13,7 @@ const ApiService = {
             throw error;
         }
     },
+    // Can implement other methods if needed
 };
 
 export default ApiService;

@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# Project Title
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Weekdays Clone: Search Job Functionality Implementation
 
-## Available Scripts
+# Github
 
-In the project directory, you can run:
+Switch to 'master' branch
 
-### `npm start`
+# Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To start the project, run:
+npm start
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Prerequisites
 
-### `npm test`
+Before starting, install the necessary dependencies:
+npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Key Considerations
 
-### `npm run build`
+1. Data Source: Utilizes "https://api.weekday.technology/adhoc/getSampleJdJSON" to fetch the initial 30 items.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Incomplete API Data: Due to the absence of specific fields in the API data, filtering based on the 'Tech stack' was omitted (as per document) and filter based on 'Number of Emplyees' was ommited (as per UI of extension).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Filter Implementation for Remote:
+   Remote: Returns all jobs where the location is explicitly "remote".
+   In-office: Returns all jobs that do not list "remote" as a location.
+   Hybrid: Targets jobs that include "hybrid" in the location description (Note: No test data available for this case).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. TypeScript: Enhanced type checking and reduced type errors by using TypeScript.
 
-### `npm run eject`
+5. Path Aliasing: Simplified imports using path aliasing with Craco.
+   Project Structure: Standardized folder structure segregating components, data, hooks, etc.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+6. API Service Layer: Created a centralized API service for network requests, currently supporting POST requests with potential for expansion.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+7. Interactive Elements: Implemented dummy buttons for "Easy Apply" and "Unlock Referral Link" due to lack of corresponding API data.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+8. Salary Display Adjustments: Adjusted the estimated salary component to align with the currency format provided by the API, omitting 'LPA'.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+9. Infinite Scrolling: Added infinite scrolling to load more jobs as the user scrolls.
 
-## Learn More
+10. Expanded Job Card View: Enabled viewing detailed job information upon clicking 'view job'.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+11. Randomized Data: Randomized data for 'Posted x days ago' and 'type' in the expanded job card view due to missing API data.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+12. Responsive Design : Tested responsiveness to an extant. One card at a time can be seen on mobile.
+
+# Built With
+
+React - The web framework used.
+TypeScript - Programming language used.
+Craco - For managing webpack configurations.
+
+# Authors
+
+Nirjhar Roy

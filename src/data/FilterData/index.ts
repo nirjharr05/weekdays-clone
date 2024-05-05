@@ -1,12 +1,4 @@
 export const rolesData = {
-    Product: [{ value: "product manager", label: "Product manager" }],
-    Operations: [
-        { value: "Operations Manager", label: "Operations Manager" },
-        {
-            value: "founder's office/chief Of staff",
-            label: "Founder's office/chief Of staff",
-        },
-    ],
     Engineering: [
         { value: "backend", label: "Backend" },
         { value: "frontend", label: "Frontend" },
@@ -33,6 +25,14 @@ export const rolesData = {
         { value: "design manager", label: "Design manager" },
         { value: "graphic designer", label: "Graphic designer" },
         { value: "product designer", label: "Product designer" },
+    ],
+    Product: [{ value: "product manager", label: "Product manager" }],
+    Operations: [
+        { value: "Operations Manager", label: "Operations Manager" },
+        {
+            value: "founder's office/chief Of staff",
+            label: "Founder's office/chief Of staff",
+        },
     ],
     Sales: [
         {
@@ -98,4 +98,11 @@ export const minimumBasePay = [
     { value: 50, label: "50L" },
     { value: 60, label: "60L" },
     { value: 70, label: "70L" },
+];
+
+export const locationData = [
+    { value: "delhi ncr", label: "Delhi NCR" },
+    { value: "mumbai", label: "Mumbai" },
+    { value: "chennai", label: "Chennai" },
+    { value: "bangalore", label: "Bangalore" },
 ];

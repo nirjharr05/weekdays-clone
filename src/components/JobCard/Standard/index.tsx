@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { JobDetails } from "@/interfaces/JobItem";
+
 import styles from "./Standard.module.css";
 
 const JobCard = (props: any) => {
@@ -15,12 +17,12 @@ const JobCard = (props: any) => {
             return "Not Available";
         }
         if (minSalary === null) {
-            return `0 - ${maxSalary} ${currency}`;
+            return `${currency} 0k - ${maxSalary}k`;
         }
         if (maxSalary === null) {
             return `${minSalary}+ ${currency}`;
         }
-        return `${currency} ${minSalary} - ${maxSalary}`;
+        return `${currency} ${minSalary}k - ${maxSalary}k`;
     };
 
     useEffect(() => {
@@ -95,7 +97,7 @@ const JobCard = (props: any) => {
                 </div>
             </div>
             <div className={styles.cardFooter}>
-                <button className={styles.easyApply}>Easy Apply</button>
+                <button className={styles.easyApply}>⚡ Easy Apply</button>
                 <button className={styles.unlockReferral}>
                     Unlock Referral links
                 </button>

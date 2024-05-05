@@ -79,7 +79,9 @@ const JobCardExpanded = (props: any) => {
                         <p>{data?.jobDetailsFromCompany}</p>
                     </div>
                     <div className={styles.cardFooter}>
-                        <button className={styles.easyApply}>Easy Apply</button>
+                        <button className={styles.easyApply}>
+                            ⚡ Easy Apply
+                        </button>
                         <button className={styles.unlockReferral}>
                             Unlock Referral links
                         </button>

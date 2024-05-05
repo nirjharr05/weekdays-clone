@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
+
 import MultiSelectDropdown from "@/components/MultiSelect";
 import SingleSearch from "@/components/SearchInput";
+
 import {
     rolesData,
     experienceYears,
     modeOfWork,
     minimumBasePay,
+    locationData,
 } from "@/data/FilterData";
+
 import { FilterTypesValues } from "@/interfaces/Filters";
+
 import styles from "./Filters.module.css";
 
 const FilterComponent = (props: any) => {
@@ -41,6 +46,12 @@ const FilterComponent = (props: any) => {
             placeholder: "Remote",
             type: "select_single",
             data: modeOfWork,
+        },
+        {
+            id: "city",
+            placeholder: "Location",
+            type: "select_single",
+            data: locationData,
         },
         {
             id: "minJdSalary",

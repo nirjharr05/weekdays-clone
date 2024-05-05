@@ -1,13 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
 import JobCard from "@/components/JobCard/Standard";
 import JobCardExpanded from "@/components/JobCard/Expanded";
 
+import useDynamicRowCompletion from "@/hooks/useDynamicRowCompletion";
+
 import ApiService from "@/services/APIService";
+
 import { JobDetails } from "@/interfaces/JobItem";
+
 import styles from "./CardGrid.module.css";
 
 const CardGrid = (props: any) => {
-    const { filterData } = props;
+    const { filterData, setCount } = props;
     const [items, setItems] = useState<JobDetails[]>([]);
     const [filteredItems, setFilteredItems] = useState<JobDetails[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,23 +22,15 @@ const CardGrid = (props: any) => {
     const [activeCardId, setActiveCardId] = useState<string>("");
     const [open, setOpen] = useState<boolean>(false);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    // hooks and ref added to know how many items are there per row as per screen size
+    const containerRef = useRef<HTMLDivElement>(null);
+    const itemsPerRow = useDynamicRowCompletion(containerRef, 360, 40);
 
     const checkRowCompletion = useCallback(() => {
-        if (filteredItems.length % 3 !== 0 && !noMoreData) {
+        if (filteredItems.length % itemsPerRow !== 0 && !noMoreData) {
             fetchData();
         }
-    }, [filteredItems, noMoreData]);
-
-    useEffect(() => {
-        applyFilters();
-    }, [items, filterData]);
-
-    useEffect(() => {
-        checkRowCompletion();
-    }, [filteredItems, checkRowCompletion]);
+    }, [filteredItems, itemsPerRow, noMoreData]);
 
     const applyFilters = () => {
         const activeFilters = Object.fromEntries(
@@ -79,6 +76,15 @@ const CardGrid = (props: any) => {
                                         return false;
                                 }
                             });
+                        case "city":
+                            return filters.some(
+                                (filter: any) =>
+                                    item["location"] &&
+                                    item["location"]
+                                        .toString()
+                                        .toLowerCase() ===
+                                        filter.value.toString().toLowerCase(),
+                            );
                         case "jobRole":
                             return filters.some(
                                 (filter: any) =>
@@ -102,14 +108,14 @@ const CardGrid = (props: any) => {
         setFilteredItems(newFilteredItems);
     };
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         if (isLoading || noMoreData) return;
 
         setIsLoading(true);
         try {
-            const response: any = await ApiService.post(
+            const response = await ApiService.post(
                 "https://api.weekday.technology/adhoc/getSampleJdJSON",
-                { page, limit: 9 },
+                { page, limit: 30 },
             );
             const data = response?.jdList || [];
             if (data.length > 0) {
@@ -123,9 +129,9 @@ const CardGrid = (props: any) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [isLoading, noMoreData, page]);
 
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         if (
             window.innerHeight + document.documentElement.scrollTop !==
                 document.documentElement.offsetHeight ||
@@ -133,16 +139,35 @@ const CardGrid = (props: any) => {
         ) {
             return;
         }
+
         fetchData();
-    };
+    }, [isLoading, fetchData]);
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [isLoading]);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [handleScroll]);
+
+    useEffect(() => {
+        applyFilters();
+    }, [items, filterData]);
+
+    useEffect(() => {
+        checkRowCompletion();
+    }, [filteredItems, checkRowCompletion]);
+
+    useEffect(() => {
+        setCount(filteredItems?.length);
+    }, [filteredItems]);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
-        <div className={styles.cardGridContainer}>
+        <div ref={containerRef} className={styles.cardGridContainer}>
             {filteredItems.map((item: JobDetails, idx: number) => (
                 <div key={`id_${idx}`} className={styles.card}>
                     <JobCard
@@ -154,7 +179,7 @@ const CardGrid = (props: any) => {
                     />
                 </div>
             ))}
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <div>Loading more...</div>}
             {noMoreData && <div>No more data.</div>}
             {open && (
                 <JobCardExpanded
