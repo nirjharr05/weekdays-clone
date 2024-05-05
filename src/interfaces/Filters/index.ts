@@ -7,7 +7,7 @@ export interface FilterTypes {
 }
 
 export interface FilterTypesValues {
-    roles: string[];
+    jobRole: string[];
     experience: number[];
     modeOfWork: string[];
     minimumBasePay: number[];

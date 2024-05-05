@@ -3,7 +3,6 @@ import MultiSelectDropdown from "@/components/MultiSelect";
 import SingleSearch from "@/components/SearchInput";
 import {
     rolesData,
-    numberOfEmployees,
     experienceYears,
     modeOfWork,
     minimumBasePay,
@@ -12,6 +11,7 @@ import { FilterTypesValues } from "@/interfaces/Filters";
 import styles from "./Filters.module.css";
 
 const FilterComponent = (props: any) => {
+    const { getFilters } = props;
     const [filterItems, setFilterItems] = useState<Partial<FilterTypesValues>>(
         {},
     );
@@ -25,31 +25,25 @@ const FilterComponent = (props: any) => {
 
     const filterMetaData = [
         {
-            id: "roles",
+            id: "jobRole",
             placeholder: "Roles",
             type: "select_category",
             data: rolesData,
         },
-        // {
-        //     id: "numberOfEmployees",
-        //     placeholder: "Number of Employees",
-        //     type: "select_single",
-        //     data: numberOfEmployees,
-        // },
         {
-            id: "experience",
+            id: "minExp",
             placeholder: "Experience",
             type: "select_single",
             data: experienceYears,
         },
         {
-            id: "modeOfWork",
-            placeholder: "Mode of Work",
+            id: "location",
+            placeholder: "Remote",
             type: "select_single",
             data: modeOfWork,
         },
         {
-            id: "minimumBasePay",
+            id: "minJdSalary",
             placeholder: "Minimum Base Pay Salary",
             type: "select_single",
             data: minimumBasePay,
@@ -62,7 +56,7 @@ const FilterComponent = (props: any) => {
     ];
 
     useEffect(() => {
-        console.log("selected", filterItems);
+        getFilters(filterItems);
     }, [filterItems]);
 
     return (

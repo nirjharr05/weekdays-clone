@@ -1,40 +1,119 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import JobCard from "@/components/JobCard/Standard";
 import ApiService from "@/services/APIService";
 import { JobDetails } from "@/interfaces/JobItem";
-import { FilterTypes } from "@/interfaces/Filters";
-
 import styles from "./CardGrid.module.css";
 
 const CardGrid = (props: any) => {
-    const { setFilterData } = props;
-
-    const [items, setItems] = useState<any[]>([]);
+    const { filterData } = props;
+    const [items, setItems] = useState<JobDetails[]>([]);
+    const [filteredItems, setFilteredItems] = useState<JobDetails[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [noMoreData, setNoMoreData] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    const checkRowCompletion = useCallback(() => {
+        if (filteredItems.length % 3 !== 0 && !noMoreData) {
+            fetchData();
+        }
+    }, [filteredItems, noMoreData]);
+
+    useEffect(() => {
+        applyFilters();
+    }, [items, filterData]);
+
+    useEffect(() => {
+        checkRowCompletion();
+    }, [filteredItems, checkRowCompletion]);
+
+    const applyFilters = () => {
+        const activeFilters = Object.fromEntries(
+            Object.entries(filterData).filter(
+                ([_, filters]: any) => filters.length > 0,
+            ),
+        );
+
+        if (Object.keys(activeFilters).length === 0) {
+            setFilteredItems(items);
+            return;
+        }
+
+        const newFilteredItems = items.filter((item: any) => {
+            return Object.entries(activeFilters).every(
+                ([key, filters]: any) => {
+                    switch (key) {
+                        case "minExp":
+                        case "minJdSalary":
+                            return filters.some((filter: any) => {
+                                return (
+                                    item[key] != null &&
+                                    Number(item[key]) >= Number(filter.value)
+                                );
+                            });
+                        case "location":
+                            return filters.some((filter: any) => {
+                                const itemLocation = item[key]
+                                    ? item[key].toString().toLowerCase()
+                                    : "";
+                                const filterValue = filter.value
+                                    .toString()
+                                    .toLowerCase();
+
+                                switch (filterValue) {
+                                    case "remote":
+                                        return itemLocation === "remote";
+                                    case "office":
+                                        return itemLocation !== "remote";
+                                    case "hybrid":
+                                        return itemLocation.includes("hybrid");
+                                    default:
+                                        return false;
+                                }
+                            });
+                        case "jobRole":
+                            return filters.some(
+                                (filter: any) =>
+                                    item[key] &&
+                                    item[key].toString().toLowerCase() ===
+                                        filter.value.toString().toLowerCase(),
+                            );
+                        default:
+                            return filters.some(
+                                (filter: any) => item[key] === filter.value,
+                            );
+                    }
+                },
+            );
+        });
+
+        setFilteredItems(newFilteredItems);
+    };
+
     const fetchData = async () => {
+        if (isLoading || noMoreData) return;
+
         setIsLoading(true);
         try {
             const response: any = await ApiService.post(
                 "https://api.weekday.technology/adhoc/getSampleJdJSON",
-                {
-                    page,
-                    limit: 9,
-                },
+                { page, limit: 9 },
             );
-            const data = response?.jdList;
-            if (data && data?.length > 0) {
-                setItems((prevItems: any) => [...prevItems, ...data]);
+            const data = response?.jdList || [];
+            if (data.length > 0) {
+                setItems((prevItems) => [...prevItems, ...data]);
                 setPage((prevPage) => prevPage + 1);
+            } else {
+                setNoMoreData(true);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     const handleScroll = () => {
@@ -50,21 +129,18 @@ const CardGrid = (props: any) => {
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, [handleScroll]);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [isLoading]);
 
     return (
         <div className={styles.cardGridContainer}>
-            {items?.map((item: JobDetails, idx: number) => {
-                return (
-                    <div key={`id_${idx}`} className={styles.card}>
-                        <JobCard id={`card_${idx}`} data={item} />
-                    </div>
-                );
-            })}
+            {filteredItems.map((item: JobDetails, idx: number) => (
+                <div key={`id_${idx}`} className={styles.card}>
+                    <JobCard id={`card_${idx}`} data={item} />
+                </div>
+            ))}
             {isLoading && <div>Loading...</div>}
+            {noMoreData && <div>No more data.</div>}
         </div>
     );
 };

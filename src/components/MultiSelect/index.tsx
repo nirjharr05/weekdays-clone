@@ -113,7 +113,9 @@ const MultiSelectDropdown = (props: any) => {
                     ) : (
                         selectedItems.map((item, index) => (
                             <div key={index} className={styles.tag}>
-                                <div className={styles.tagText}>{item}</div>
+                                <div className={styles.tagText}>
+                                    {item.label}
+                                </div>
                                 <button onClick={() => handleRemove(item)}>
                                     ×
                                 </button>
@@ -147,7 +149,7 @@ const MultiSelectDropdown = (props: any) => {
                               <div
                                   key={`${item.value.toString()}_${idx}`}
                                   className={styles.item}
-                                  onClick={() => handleSelect(item.value)}
+                                  onClick={() => handleSelect(item)}
                               >
                                   {item.label}
                               </div>
@@ -162,13 +164,13 @@ const MultiSelectDropdown = (props: any) => {
                                   {localData[category]?.map(
                                       (item: any, idx: number) => (
                                           <div
-                                              key={`${item.toString()}_${idx}`}
+                                              key={`${item.value.toString()}_${idx}`}
                                               className={styles.item}
                                               onClick={() =>
                                                   handleSelect(item, category)
                                               }
                                           >
-                                              {item}
+                                              {item.label}
                                           </div>
                                       ),
                                   )}

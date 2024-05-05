@@ -11,8 +11,8 @@ const Layout = () => {
 
     return (
         <div className={styles.container}>
-            <FilterComponent filterData={filterData} />
-            <CardGrid setFilterData={setFilterData} />
+            <FilterComponent getFilters={setFilterData} />
+            <CardGrid filterData={filterData} />
         </div>
     );
 };
