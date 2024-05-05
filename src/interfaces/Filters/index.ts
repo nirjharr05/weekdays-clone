@@ -1,9 +1,15 @@
 export interface FilterTypes {
-    minExp: any;
+    roles: any;
+    experience: any;
+    modeOfWork: any;
+    minimumBasePay: any;
     companyName: any;
-    location: any;
-    locationType: any;
-    techStack: any;
-    role: any;
-    minBasePay: any;
+}
+
+export interface FilterTypesValues {
+    roles: string[];
+    experience: number[];
+    modeOfWork: string[];
+    minimumBasePay: number[];
+    companyName: string;
 }

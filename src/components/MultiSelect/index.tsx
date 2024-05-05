@@ -3,20 +3,18 @@ import DropdownToggle from "@/svg/DropdownToggle";
 import styles from "./MultiSelectDropdown.module.css";
 
 const MultiSelectDropdown = (props: any) => {
-    const { id, placeholder, data, type } = props;
+    const { id, placeholder, data, type, setFilterItems } = props;
     const [localData, setLocalData] = useState<any>(data);
     const [initialData] = useState<any>(data);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        setLocalData(data);
-    }, [data]);
-
     const handleSelect = (item: string | number, category?: string) => {
         if (type === "select_single") {
-            setSelectedItems([item]);
+            setSelectedItems((prev) => [...prev, item]);
+            const updatedData = localData.filter((i: any) => i.value !== item);
+            setLocalData(updatedData);
             setIsOpen(false);
             return;
         }
@@ -39,33 +37,41 @@ const MultiSelectDropdown = (props: any) => {
     };
 
     const handleRemove = (item: string | number) => {
-        if (type === "select_category") {
+        setSelectedItems((prev) => prev.filter((i) => i !== item));
+
+        if (type === "select_single") {
+            const itemDetails = initialData.find((i: any) => i.value === item);
+            if (itemDetails) {
+                setLocalData((prevData: any) =>
+                    [...prevData, itemDetails].sort(
+                        (a: any, b: any) => a.value - b.value,
+                    ),
+                );
+            }
+        } else if (type === "select_category") {
             const category = Object.keys(initialData).find((key) =>
-                initialData[key].includes(item),
+                initialData[key].some((i: any) => i === item),
             );
             if (category) {
                 const updatedCategory = [
                     ...(localData[category] || []),
                     item,
-                ].sort() as (string | number)[];
+                ].sort((a: any, b: any) => a - b);
                 setLocalData({
                     ...localData,
                     [category]: updatedCategory,
                 });
             }
         }
-        setSelectedItems((prev) => prev.filter((i) => i !== item));
     };
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
-
     const clearAll = () => {
-        if (type === "select_category") {
-            const newData = { ...initialData };
-            setLocalData(newData);
-        }
+        const newData =
+            type === "select_single" ? initialData : { ...initialData };
+        setLocalData(newData);
         setSelectedItems([]);
     };
 
@@ -85,6 +91,14 @@ const MultiSelectDropdown = (props: any) => {
         };
     }, []);
 
+    useEffect(() => {
+        setLocalData(data);
+    }, [data]);
+
+    useEffect(() => {
+        setFilterItems(id, selectedItems);
+    }, [selectedItems, id]);
+
     return (
         <div
             className={styles.multiSelectDropdown}
@@ -93,58 +107,71 @@ const MultiSelectDropdown = (props: any) => {
             key={id}
         >
             <div className={styles.inputLike} onClick={toggleDropdown}>
-                {selectedItems.length === 0 ? (
-                    <div className={styles.placeholder}>{placeholder}</div>
-                ) : (
-                    selectedItems.map((item, index) => (
-                        <div key={index} className={styles.tag}>
-                            <div className={styles.tagText}>{item}</div>
-                            <button onClick={() => handleRemove(item)}>
-                                ×
-                            </button>
+                <div className={styles.tagHolder}>
+                    {selectedItems.length === 0 ? (
+                        <div className={styles.placeholder}>{placeholder}</div>
+                    ) : (
+                        selectedItems.map((item, index) => (
+                            <div key={index} className={styles.tag}>
+                                <div className={styles.tagText}>{item}</div>
+                                <button onClick={() => handleRemove(item)}>
+                                    ×
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+                <div className={styles.actionHolder}>
+                    {selectedItems.length > 0 && (
+                        <button
+                            className={styles.clearButton}
+                            onClick={clearAll}
+                        >
+                            ×
+                        </button>
+                    )}
+                    <div className={styles.indicator}>
+                        <span className={styles.separator} />
+                        <div className={styles.svgHolder}>
+                            <DropdownToggle className={styles.dropdownToggle} />
                         </div>
-                    ))
-                )}
-                {selectedItems.length > 0 && (
-                    <button className={styles.clearButton} onClick={clearAll}>
-                        ×
-                    </button>
-                )}
-                <div className={styles.indicator}>
-                    <span className={styles.separator} />
-                    <div className={styles.svgHolder}>
-                        <DropdownToggle className={styles.dropdownToggle} />
                     </div>
                 </div>
             </div>
             {isOpen && (
                 <div className={styles.dropdown}>
                     {type === "select_single"
-                        ? localData.map((item: any) => (
+                        ? localData &&
+                          localData.length > 0 &&
+                          localData.map((item: any, idx: number) => (
                               <div
-                                  key={item.value.toString()}
+                                  key={`${item.value.toString()}_${idx}`}
                                   className={styles.item}
                                   onClick={() => handleSelect(item.value)}
                               >
                                   {item.label}
                               </div>
                           ))
-                        : Object.keys(localData).map((category) => (
+                        : localData &&
+                          Object.keys(localData).length > 0 &&
+                          Object.keys(localData).map((category) => (
                               <div key={category}>
                                   <div className={styles.category}>
                                       {category}
                                   </div>
-                                  {localData[category].map((item: any) => (
-                                      <div
-                                          key={item.toString()}
-                                          className={styles.item}
-                                          onClick={() =>
-                                              handleSelect(item, category)
-                                          }
-                                      >
-                                          {item}
-                                      </div>
-                                  ))}
+                                  {localData[category]?.map(
+                                      (item: any, idx: number) => (
+                                          <div
+                                              key={`${item.toString()}_${idx}`}
+                                              className={styles.item}
+                                              onClick={() =>
+                                                  handleSelect(item, category)
+                                              }
+                                          >
+                                              {item}
+                                          </div>
+                                      ),
+                                  )}
                               </div>
                           ))}
                 </div>

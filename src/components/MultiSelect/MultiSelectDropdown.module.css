@@ -6,7 +6,7 @@
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    min-width: 175px;
+    min-width: 200px;
     position: relative;
     flex-wrap: wrap;
     padding-left: 8px;
@@ -15,12 +15,21 @@
 
 .inputLike {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    cursor: text;
     width: 100%;
-    flex-wrap: wrap;
-    border: none;
-    outline: none;
+    .tagHolder {
+        width: 85%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .actionHolder {
+        width: 15%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 }
 
 .inputLike:focus-within {
