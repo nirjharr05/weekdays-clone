@@ -1,36 +1,60 @@
-import React, { useState, useRef, useEffect } from "react";
-import DropdownToggle from "../../svg/DropdownToggle";
-
+import { useState, useRef, useEffect } from "react";
+import DropdownToggle from "@/svg/DropdownToggle";
 import styles from "./MultiSelectDropdown.module.css";
 
-function MultiSelectDropdown() {
-    const [items, setItems] = useState<any>({
-        Engineering: ["Backend", "Frontend", "Fullstack"],
-        Design: ["UX", "UI"],
-        "Project Management": ["Scrum Master", "Product Owner"],
-    });
+const MultiSelectDropdown = (props: any) => {
+    const { id, placeholder, data, type } = props;
+    const [localData, setLocalData] = useState<any>(data);
+    const [initialData] = useState<any>(data);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const wrapperRef = useRef<any>(null);
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-    const handleSelect = (item: any, category: any) => {
-        setSelectedItems((prev: any) => [...prev, item]);
-        setItems((prev: any) => ({
-            ...prev,
-            [category]: prev[category].filter((i: any) => i !== item),
-        }));
+    useEffect(() => {
+        setLocalData(data);
+    }, [data]);
+
+    const handleSelect = (item: string | number, category?: string) => {
+        if (type === "select_single") {
+            setSelectedItems([item]);
+            setIsOpen(false);
+            return;
+        }
+        if (type === "select_category" && category) {
+            setSelectedItems((prev) => [...prev, item]);
+            const updatedCategory = localData[category].filter(
+                (i: any) => i !== item,
+            );
+            setLocalData({
+                ...localData,
+                [category]: updatedCategory,
+            });
+            if (updatedCategory.length === 0) {
+                const newData = { ...localData };
+                delete newData[category];
+                setLocalData(newData);
+            }
+        }
         setIsOpen(false);
     };
 
-    const handleRemove = (item: any) => {
-        const category: any = Object.keys(items).find(
-            (key) => items[key].includes(item) || [],
-        );
-        setSelectedItems((prev) => prev.filter((i: any) => i !== item));
-        setItems((prev: any) => ({
-            ...prev,
-            [category]: [...prev[category], item].sort(),
-        }));
+    const handleRemove = (item: string | number) => {
+        if (type === "select_category") {
+            const category = Object.keys(initialData).find((key) =>
+                initialData[key].includes(item),
+            );
+            if (category) {
+                const updatedCategory = [
+                    ...(localData[category] || []),
+                    item,
+                ].sort() as (string | number)[];
+                setLocalData({
+                    ...localData,
+                    [category]: updatedCategory,
+                });
+            }
+        }
+        setSelectedItems((prev) => prev.filter((i) => i !== item));
     };
 
     const toggleDropdown = () => {
@@ -38,27 +62,23 @@ function MultiSelectDropdown() {
     };
 
     const clearAll = () => {
-        const newItems = { ...items };
-        selectedItems.forEach((item) => {
-            const category: any = Object.keys(items).find(
-                (key) => newItems[key].includes(item) || [],
-            );
-            newItems[category].push(item);
-        });
-        setItems(newItems);
+        if (type === "select_category") {
+            const newData = { ...initialData };
+            setLocalData(newData);
+        }
         setSelectedItems([]);
     };
 
-    // Close dropdown when clicking outside
     useEffect(() => {
-        function handleClickOutside(event: any) {
+        const handleClickOutside = (event: MouseEvent) => {
             if (
                 wrapperRef.current &&
-                !wrapperRef.current.contains(event.target)
+                !wrapperRef.current.contains(event.target as Node)
             ) {
                 setIsOpen(false);
             }
-        }
+        };
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -70,13 +90,14 @@ function MultiSelectDropdown() {
             className={styles.multiSelectDropdown}
             ref={wrapperRef}
             tabIndex={0}
+            key={id}
         >
             <div className={styles.inputLike} onClick={toggleDropdown}>
                 {selectedItems.length === 0 ? (
-                    <div className={styles.placeholder}>Select Roles</div>
+                    <div className={styles.placeholder}>{placeholder}</div>
                 ) : (
-                    selectedItems.map((item) => (
-                        <div key={item} className={styles.tag}>
+                    selectedItems.map((item, index) => (
+                        <div key={index} className={styles.tag}>
                             <div className={styles.tagText}>{item}</div>
                             <button onClick={() => handleRemove(item)}>
                                 ×
@@ -91,31 +112,45 @@ function MultiSelectDropdown() {
                 )}
                 <div className={styles.indicator}>
                     <span className={styles.separator} />
-                    <div className={styles.dropdownArrowContainer}>
+                    <div className={styles.svgHolder}>
                         <DropdownToggle className={styles.dropdownToggle} />
                     </div>
                 </div>
             </div>
             {isOpen && (
                 <div className={styles.dropdown}>
-                    {Object.keys(items).map((category) => (
-                        <div key={category}>
-                            <div className={styles.category}>{category}</div>
-                            {items[category].map((item: any) => (
-                                <div
-                                    key={item}
-                                    className={styles.item}
-                                    onClick={() => handleSelect(item, category)}
-                                >
-                                    {item}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                    {type === "select_single"
+                        ? localData.map((item: any) => (
+                              <div
+                                  key={item.value.toString()}
+                                  className={styles.item}
+                                  onClick={() => handleSelect(item.value)}
+                              >
+                                  {item.label}
+                              </div>
+                          ))
+                        : Object.keys(localData).map((category) => (
+                              <div key={category}>
+                                  <div className={styles.category}>
+                                      {category}
+                                  </div>
+                                  {localData[category].map((item: any) => (
+                                      <div
+                                          key={item.toString()}
+                                          className={styles.item}
+                                          onClick={() =>
+                                              handleSelect(item, category)
+                                          }
+                                      >
+                                          {item}
+                                      </div>
+                                  ))}
+                              </div>
+                          ))}
                 </div>
             )}
         </div>
     );
-}
+};
 
 export default MultiSelectDropdown;

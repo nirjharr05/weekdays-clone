@@ -1,21 +1,18 @@
-import MultiSelectDropdown from "@/components/MultiSelect";
-
+import { useState } from "react";
 import CardGrid from "@/components/CardGrid";
+import FilterComponent from "@/components/Filters";
+
+import { FilterTypes } from "@/interfaces/Filters";
 
 import styles from "./Layout.module.css";
 
 const Layout = () => {
+    const [filterData, setFilterData] = useState<Partial<FilterTypes>>({});
+
     return (
         <div className={styles.container}>
-            <div className={styles.filterBar}>
-                <div className={styles.inputHolder}>
-                    <MultiSelectDropdown />
-                    <MultiSelectDropdown />
-                    <MultiSelectDropdown />
-                    <MultiSelectDropdown />
-                </div>
-            </div>
-            <CardGrid />
+            <FilterComponent filterData={filterData} />
+            <CardGrid setFilterData={setFilterData} />
         </div>
     );
 };

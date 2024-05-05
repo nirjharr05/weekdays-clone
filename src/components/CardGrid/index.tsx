@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import JobCard from "@/components/JobCard/Standard";
 import ApiService from "@/services/APIService";
 import { JobDetails } from "@/interfaces/JobItem";
+import { FilterTypes } from "@/interfaces/Filters";
 
 import styles from "./CardGrid.module.css";
 
-const CardGrid = () => {
+const CardGrid = (props: any) => {
+    const { setFilterData } = props;
+
     const [items, setItems] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
