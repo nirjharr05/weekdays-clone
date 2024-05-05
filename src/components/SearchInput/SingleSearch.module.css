@@ -1,0 +1,37 @@
+.container {
+    position: relative;
+}
+
+.input {
+    min-width: 200px;
+    font-size: 13px;
+    font-weight: 300;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 36px;
+    margin-top: 8px;
+}
+
+.label {
+    position: absolute;
+    left: 10px;
+    top: 18px;
+    color: #999;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.input:focus + .label,
+.filled + .label {
+    top: -16px;
+    left: 0px;
+    font-size: 12px;
+    color: #666;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #555;
+}

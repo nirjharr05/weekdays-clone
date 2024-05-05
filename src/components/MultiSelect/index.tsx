@@ -10,10 +10,12 @@ const MultiSelectDropdown = (props: any) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-    const handleSelect = (item: string | number, category?: string) => {
+    const handleSelect = (item: any | number, category?: string) => {
         if (type === "select_single") {
             setSelectedItems((prev) => [...prev, item]);
-            const updatedData = localData.filter((i: any) => i.value !== item);
+            const updatedData = localData.filter(
+                (i: any) => i?.value !== item?.value,
+            );
             setLocalData(updatedData);
             setIsOpen(false);
             return;
@@ -36,11 +38,13 @@ const MultiSelectDropdown = (props: any) => {
         setIsOpen(false);
     };
 
-    const handleRemove = (item: string | number) => {
+    const handleRemove = (item: any) => {
         setSelectedItems((prev) => prev.filter((i) => i !== item));
 
         if (type === "select_single") {
-            const itemDetails = initialData.find((i: any) => i.value === item);
+            const itemDetails = initialData.find(
+                (i: any) => i?.value === item?.value,
+            );
             if (itemDetails) {
                 setLocalData((prevData: any) =>
                     [...prevData, itemDetails].sort(
@@ -108,20 +112,19 @@ const MultiSelectDropdown = (props: any) => {
         >
             <div className={styles.inputLike} onClick={toggleDropdown}>
                 <div className={styles.tagHolder}>
-                    {selectedItems.length === 0 ? (
-                        <div className={styles.placeholder}>{placeholder}</div>
-                    ) : (
-                        selectedItems.map((item, index) => (
-                            <div key={index} className={styles.tag}>
-                                <div className={styles.tagText}>
-                                    {item.label}
-                                </div>
-                                <button onClick={() => handleRemove(item)}>
-                                    ×
-                                </button>
-                            </div>
-                        ))
-                    )}
+                    <div
+                        className={`${styles.placeholder} ${selectedItems.length > 0 ? styles.filled : ""}`}
+                    >
+                        {placeholder}
+                    </div>
+                    {selectedItems.map((item, index) => (
+                        <div key={index} className={styles.tag}>
+                            <div className={styles.tagText}>{item.label}</div>
+                            <button onClick={() => handleRemove(item)}>
+                                ×
+                            </button>
+                        </div>
+                    ))}
                 </div>
                 <div className={styles.actionHolder}>
                     {selectedItems.length > 0 && (

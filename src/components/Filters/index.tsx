@@ -82,8 +82,8 @@ const FilterComponent = (props: any) => {
                             key={id}
                             id={id}
                             placeholder={placeholder}
-                            setFilterItems={(value: string) =>
-                                handleFilterChange(id, [value])
+                            onSearch={(value: string) =>
+                                handleFilterChange(id, value)
                             }
                         />
                     ) : null;

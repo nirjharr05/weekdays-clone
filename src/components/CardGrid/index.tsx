@@ -82,8 +82,12 @@ const CardGrid = (props: any) => {
                                         filter.value.toString().toLowerCase(),
                             );
                         default:
-                            return filters.some(
-                                (filter: any) => item[key] === filter.value,
+                            return (
+                                item[key] &&
+                                item[key]
+                                    .toString()
+                                    .toLowerCase()
+                                    .includes(filters.toLowerCase())
                             );
                     }
                 },
