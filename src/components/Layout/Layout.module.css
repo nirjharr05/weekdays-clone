@@ -1,5 +1,15 @@
-.container {
-    width: 100%;
+.content {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
-    box-sizing: border-box;
+}
+
+.header {
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color: blue;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }

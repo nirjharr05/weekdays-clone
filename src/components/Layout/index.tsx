@@ -10,7 +10,8 @@ const Layout = () => {
     const [filterData, setFilterData] = useState<Partial<FilterTypes>>({});
 
     return (
-        <div className={styles.container}>
+        <div className={styles.content}>
+            <header className={styles.header}>Search jobs</header>
             <FilterComponent getFilters={setFilterData} />
             <CardGrid filterData={filterData} />
         </div>

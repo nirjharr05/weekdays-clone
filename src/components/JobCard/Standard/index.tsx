@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import JobCardExpanded from "@/components/JobCard/Expanded";
 import { JobDetails } from "@/interfaces/JobItem";
 import styles from "./Standard.module.css";
 
 const JobCard = (props: any) => {
-    const { data } = props;
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const { id, data, setActiveCardData, setActiveCardId, setOpen } = props;
     const [cardData, setCardData] = useState<Partial<JobDetails>>({});
 
     const salaryStringBuilder = (
@@ -77,7 +75,11 @@ const JobCard = (props: any) => {
                     <div className={styles.showMore}>
                         <button
                             className={styles.button}
-                            onClick={() => setIsExpanded(true)}
+                            onClick={() => {
+                                setActiveCardId(id);
+                                setActiveCardData(cardData);
+                                setOpen(true);
+                            }}
                         >
                             View job
                         </button>
@@ -98,13 +100,6 @@ const JobCard = (props: any) => {
                     Unlock Referral links
                 </button>
             </div>
-
-            {isExpanded && (
-                <JobCardExpanded
-                    data={cardData}
-                    onClose={() => setIsExpanded(false)}
-                />
-            )}
         </div>
     );
 };

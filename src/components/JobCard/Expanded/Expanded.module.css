@@ -8,19 +8,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 100000;
 }
 
 .expandedCard {
     position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
     background-color: #fff;
     padding: 20px;
     width: 80%;
     max-width: 600px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
-    height: 90%;
     border-radius: 5px;
+    z-index: inherit;
 }
 
 .closeButton {
@@ -33,4 +36,85 @@
     border: none;
     cursor: pointer;
     z-index: 1050;
+}
+
+.dataHolder {
+    padding-top: 30px;
+
+    text-align: left;
+    font-size: 20px;
+}
+
+.overview {
+    font-size: 16px;
+    font-weight: 400;
+    strong {
+        text-transform: capitalize;
+    }
+    margin: 0;
+    a {
+        margin-left: 4px;
+        color: #1876d2;
+    }
+    h4 {
+        margin: 0;
+    }
+    height: 10%;
+    img {
+        aspect-ratio: 1/1;
+        max-width: 100px;
+    }
+}
+
+.role {
+    strong {
+        text-transform: capitalize;
+    }
+    height: 5%;
+}
+.metrics {
+    height: 10%;
+    font-size: 16px;
+    font-weight: 300;
+    text-transform: capitalize;
+}
+.jobDescription {
+    height: 40%;
+
+    p {
+        font-size: 14px;
+        font-weight: 300;
+    }
+}
+
+.cardFooter {
+    height: 20%;
+}
+
+.commonButtonStyles {
+    width: 100%;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    margin: 5px 0;
+    border: none;
+    font-size: 16px;
+    line-height: 28px;
+    min-width: 64px;
+    cursor: pointer;
+    &:hover {
+        transform: scale(1.02);
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+}
+
+.easyApply {
+    composes: commonButtonStyles;
+    background-color: #55efc4;
+    color: black;
+}
+.unlockReferral {
+    composes: commonButtonStyles;
+    background-color: #4943da;
+    color: white;
 }

@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import JobCard from "@/components/JobCard/Standard";
+import JobCardExpanded from "@/components/JobCard/Expanded";
+
 import ApiService from "@/services/APIService";
 import { JobDetails } from "@/interfaces/JobItem";
 import styles from "./CardGrid.module.css";
@@ -11,6 +13,9 @@ const CardGrid = (props: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [noMoreData, setNoMoreData] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
+    const [activeCardData, setActiveCardData] = useState<JobDetails[]>([]);
+    const [activeCardId, setActiveCardId] = useState<string>("");
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         fetchData();
@@ -140,11 +145,26 @@ const CardGrid = (props: any) => {
         <div className={styles.cardGridContainer}>
             {filteredItems.map((item: JobDetails, idx: number) => (
                 <div key={`id_${idx}`} className={styles.card}>
-                    <JobCard id={`card_${idx}`} data={item} />
+                    <JobCard
+                        id={`card_${idx}`}
+                        data={item}
+                        setActiveCardData={setActiveCardData}
+                        setActiveCardId={setActiveCardId}
+                        setOpen={setOpen}
+                    />
                 </div>
             ))}
             {isLoading && <div>Loading...</div>}
             {noMoreData && <div>No more data.</div>}
+            {open && (
+                <JobCardExpanded
+                    id={activeCardId}
+                    data={activeCardData}
+                    setActiveCardData={setActiveCardData}
+                    setActiveCardId={setActiveCardId}
+                    setOpen={setOpen}
+                />
+            )}
         </div>
     );
 };
